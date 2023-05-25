@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Console name="CONSOLE_JSON" target="SYSTEM_OUT">
+	<JSONLayout compact="true" eventEol="true" properties="true" stacktraceAsString="true" objectMessageAsJsonObject="true" charset="${sys:CONSOLE_LOG_CHARSET:-utf8}">
+		<KeyValuePair key="timestamp" value="$${date:yyyy-MM-dd'T'HH:mm:ss.SSSZ}"/>
+	</JSONLayout>
+</Console>

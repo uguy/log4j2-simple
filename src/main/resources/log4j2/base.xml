@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration xmlns:xi="http://www.w3.org/2001/XInclude">
+	<xi:include href="defaults.xml"/>
+	<Appenders>
+		<xi:include href="console-appender.xml"/>
+		<xi:include href="console-json-appender.xml"/>
+		<xi:include href="console-ecs-appender.xml"/>
+		<xi:include href="file-appender.xml"/>
+	</Appenders>
+	<Loggers>
+		<Root level="ERROR">
+			<AppenderRef ref="${default-appender}"/>
+		</Root>
+		<Logger name="org.example" level="INFO"/>
+	</Loggers>
+</Configuration>
