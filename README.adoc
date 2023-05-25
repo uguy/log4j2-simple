@@ -1,0 +1,19 @@
+= Log4j2 Playground
+
+Exploration of composite configuration capabilities of log4j2.
+
+`log4j2-custom.xml` could be an externalized file to be used by the App OPS for customization.
+
+App must be started using jvm properties
+
+- `-Dlog4j2.configurationFile=classpath:log4j2/base.xml,file:log4j2-custom.xml` to mix embedded configuration and custom one
+- `-Dlogger.appender=xxx` to choose what default appender to use (CONSOLE_ECS, CONSOLE_JSON, CONSOLE_ECS, FILE)
+
+.Sample output for CONSOLE_ECS
+[source, json]
+----
+{"@timestamp":"2023-05-25T16:18:01.752Z","log.level": "INFO","message":"main", "ecs.version": "1.2.0","process.thread.name":"main","log.logger":"org.example.App","service.name":"App","service.version":"1.0.0-SNAPSHOT"}
+{"@timestamp":"2023-05-25T16:18:01.754Z","log.level":"DEBUG","message":"msg 0", "ecs.version": "1.2.0","process.thread.name":"main","log.logger":"org.example.App","service.name":"App","service.version":"1.0.0-SNAPSHOT"}
+{"@timestamp":"2023-05-25T16:18:01.755Z","log.level":"DEBUG","message":"msg 1", "ecs.version": "1.2.0","process.thread.name":"main","log.logger":"org.example.App","service.name":"App","service.version":"1.0.0-SNAPSHOT"}
+{"@timestamp":"2023-05-25T16:18:01.755Z","log.level":"DEBUG","message":"msg 2", "ecs.version": "1.2.0","process.thread.name":"main","log.logger":"org.example.App","service.name":"App","service.version":"1.0.0-SNAPSHOT"}
+----
