@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="30">
+<!--	<Appenders>-->
+<!--		<File name="MyFile" fileName="target/my_app.log">-->
+<!--			<PatternLayout>-->
+<!--				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>-->
+<!--			</PatternLayout>-->
+<!--		</File>-->
+<!--	</Appenders>-->
+	<Loggers>
+		<Root level="INFO">
+<!--			<AppenderRef ref="MyFile"/>-->
+		</Root>
+		<Logger name="org.example.internal" level="DEBUG"/>
+	</Loggers>
+</Configuration>

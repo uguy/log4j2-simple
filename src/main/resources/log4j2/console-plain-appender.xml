@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ScriptAppenderSelector name="SelectConsolePlain">
+	<Script language="groovy"><![CDATA[
+		def appenders = System.getProperty("logger.appenders","").toUpperCase()
+		if (appenders.contains("CONSOLE_PLAIN")) {
+			return "CONSOLE_PLAIN"
+		} else {
+			return "NULL"
+		}
+	]]></Script>
+	<AppenderSet>
+		<Console name="CONSOLE_PLAIN" target="SYSTEM_OUT">
+			<PatternLayout pattern="${CONSOLE_LOG_PATTERN}" charset="${LOG_CHARSET}"/>
+		</Console>
+		<Null name="NULL" />
+	</AppenderSet>
+</ScriptAppenderSelector>

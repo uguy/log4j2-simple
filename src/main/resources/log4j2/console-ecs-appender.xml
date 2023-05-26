@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Console name="CONSOLE_ECS" target="SYSTEM_OUT">
-	<EcsLayout includeMarkers="true" >
-		<KeyValuePair key="service.name" value="App"/>
-		<KeyValuePair key="service.version" value="1.0.0-SNAPSHOT"/>
-		<KeyValuePair key="service.node.name" value="${env:HOST}"/>
-	</EcsLayout>
-</Console>
+<ScriptAppenderSelector name="SelectConsoleEcs">
+	<Script language="groovy"><![CDATA[
+				def appenders = System.getProperty("logger.appenders","").toUpperCase()
+                if (appenders.contains("CONSOLE_ECS")) {
+                    return "CONSOLE_ECS"
+                } else {
+                    return "NULL"
+                }
+            ]]></Script>
+	<AppenderSet>
+		<Console name="CONSOLE_ECS" target="SYSTEM_OUT">
+			<EcsLayout includeMarkers="true">
+				<KeyValuePair key="service.name" value="${APP_NAME}"/>
+				<KeyValuePair key="service.version" value="${APP_VERSION}"/>
+				<KeyValuePair key="service.node.name" value="${hostName}"/>
+			</EcsLayout>
+		</Console>
+		<Null name="NULL"/>
+	</AppenderSet>
+</ScriptAppenderSelector>

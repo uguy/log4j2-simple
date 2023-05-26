@@ -1,19 +1,76 @@
 = Log4j2 Playground
 
-Exploration of composite configuration capabilities of log4j2.
+Exploration of some composite configuration capabilities of https://logging.apache.org/log4j/2.x/[log4j2].
 
-`log4j2-custom.xml` could be an externalized file to be used by the App OPS for customization.
+== Build
 
-App must be started using jvm properties
+This a simple *maven project* (with wrapper as an option) *using java 17*
 
-- `-Dlog4j2.configurationFile=classpath:log4j2/base.xml,file:log4j2-custom.xml` to mix embedded configuration and custom one
-- `-Dlogger.appender=xxx` to choose what default appender to use (CONSOLE_ECS, CONSOLE_JSON, CONSOLE_ECS, FILE)
+Just perform `./mvnw package` (or `./mvnw clean package` if you want to get rid of previous log files). This will produce a executable fat jar in the `target/` folder.
+
+== Configuration
+
+The App support some pre-configured appenders out the box (see xref:Startup[]) but additional configuration can be used. If you choose to do so, you should add the base configuration file (`classpath:log4j2/base.xml`) to the list and then your custom ones by using the jvm property `log4j2.configurationFile`
+
+[source, bash]
+----
+java -Dlog4j2.configurationFile="classpath:log4j2/base.xml,file:log4j2-config.xml" -Dlogger.appenders="CONSOLE_PLAIN" -jar target/log4jsimple-1.0.0-SNAPSHOT.jar
+----
+
+`log4j2-config.xml` could be an externalized file to be used by the App OPS for more customization.
+
+This file can contain any extra log4j2 configuration like more appenders, etc.
+
+.Sample log4j2-config.xml
+[source, xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="30">
+<!--	<Appenders>-->
+<!--		<File name="MyFile" fileName="target/my_app.log">-->
+<!--			<PatternLayout>-->
+<!--				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>-->
+<!--			</PatternLayout>-->
+<!--		</File>-->
+<!--	</Appenders>-->
+	<Loggers>
+		<Root level="INFO">
+<!--			<AppenderRef ref="MyFile"/>-->
+		</Root>
+		<Logger name="org.example.internal" level="DEBUG"/>
+	</Loggers>
+</Configuration>
+----
+
+== Startup
+
+App can be started using jvm property logger.appenders to enable preconfigured appenders like CONSOLE_PLAIN, CONSOLE_JSON, CONSOLE_ECS, FILE, ... )
+
+[source, bash]
+----
+#Push logs to file only
+java -Dlogger.appenders="FILE" -jar target/log4jsimple-1.0.0-SNAPSHOT.jar
+
+#Push logs to console as plain text and file
+java -Dlogger.appenders="CONSOLE_PLAIN,FILE" -jar target/log4jsimple-1.0.0-SNAPSHOT.jar
+----
 
 .Sample output for CONSOLE_ECS
 [source, json]
 ----
-{"@timestamp":"2023-05-25T16:18:01.752Z","log.level": "INFO","message":"main", "ecs.version": "1.2.0","process.thread.name":"main","log.logger":"org.example.App","service.name":"App","service.version":"1.0.0-SNAPSHOT"}
-{"@timestamp":"2023-05-25T16:18:01.754Z","log.level":"DEBUG","message":"msg 0", "ecs.version": "1.2.0","process.thread.name":"main","log.logger":"org.example.App","service.name":"App","service.version":"1.0.0-SNAPSHOT"}
-{"@timestamp":"2023-05-25T16:18:01.755Z","log.level":"DEBUG","message":"msg 1", "ecs.version": "1.2.0","process.thread.name":"main","log.logger":"org.example.App","service.name":"App","service.version":"1.0.0-SNAPSHOT"}
-{"@timestamp":"2023-05-25T16:18:01.755Z","log.level":"DEBUG","message":"msg 2", "ecs.version": "1.2.0","process.thread.name":"main","log.logger":"org.example.App","service.name":"App","service.version":"1.0.0-SNAPSHOT"}
+{"@timestamp":"2023-05-26T13:00:20.467Z","log.level":"DEBUG","message":"debug msg", "ecs.version": "1.2.0","process.thread.name":"main","log.logger":"org.example.App","service.name":"log4jsimple","service.version":"1.0.0-SNAPSHOT","service.node.name":"LAP-00287"}
+{"@timestamp":"2023-05-26T13:00:20.469Z","log.level": "INFO","message":"info msg", "ecs.version": "1.2.0","process.thread.name":"main","log.logger":"org.example.App","service.name":"log4jsimple","service.version":"1.0.0-SNAPSHOT","service.node.name":"LAP-00287"}
+{"@timestamp":"2023-05-26T13:00:20.469Z","log.level": "WARN","message":"warn msg", "ecs.version": "1.2.0","process.thread.name":"main","log.logger":"org.example.App","service.name":"log4jsimple","service.version":"1.0.0-SNAPSHOT","service.node.name":"LAP-00287"}
+{"@timestamp":"2023-05-26T13:00:20.469Z","log.level":"DEBUG","message":"debug work", "ecs.version": "1.2.0","process.thread.name":"main","log.logger":"org.example.internal.MyComponent","service.name":"log4jsimple","service.version":"1.0.0-SNAPSHOT","service.node.name":"LAP-00287"}
+{"@timestamp":"2023-05-26T13:00:20.469Z","log.level": "INFO","message":"info work", "ecs.version": "1.2.0","process.thread.name":"main","log.logger":"org.example.internal.MyComponent","service.name":"log4jsimple","service.version":"1.0.0-SNAPSHOT","service.node.name":"LAP-00287"}
+{"@timestamp":"2023-05-26T13:00:20.469Z","log.level": "WARN","message":"warn work", "ecs.version": "1.2.0","process.thread.name":"main","log.logger":"org.example.internal.MyComponent","service.name":"log4jsimple","service.version":"1.0.0-SNAPSHOT","service.node.name":"LAP-00287"}
+{"@timestamp":"2023-05-26T13:00:20.470Z","log.level":"ERROR","message":"An work error occurred", "ecs.version": "1.2.0","process.thread.name":"main","log.logger":"org.example.internal.MyComponent","service.name":"log4jsimple","service.version":"1.0.0-SNAPSHOT","service.node.name":"LAP-00287","error.type":"java.lang.RuntimeException","error.message":"Oops work exception !","error.stack_trace":"java.lang.RuntimeException: Oops work exception !\n\tat org.example.internal.MyComponent.work(MyComponent.java:13)\n\tat org.example.App.main(App.java:17)\n"}
+{"@timestamp":"2023-05-26T13:00:20.470Z","log.level":"ERROR","message":"An error occurred", "ecs.version": "1.2.0","process.thread.name":"main","log.logger":"org.example.App","service.name":"log4jsimple","service.version":"1.0.0-SNAPSHOT","service.node.name":"LAP-00287","error.type":"java.lang.RuntimeException","error.message":"Oops exception !","error.stack_trace":"java.lang.RuntimeException: Oops exception !\n\tat org.example.App.main(App.java:19)\n"}
+
 ----
+
+== Notes
+
+- `XIncludes` cannot be used to mix configurations from inside the classpath and outside the classpath.
+- Using a system property for the appender name itself is a bad idea because is evaluated on each log event (instead of once at startup for `ScriptAppenderSelector`)
+- Elastic Common Schema (ECS) : https://www.elastic.co/fr/what-is/ecs

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Configuration>
-	<Loggers>
-		<Root level="INFO">
-			<AppenderRef ref="FILE"/>
-		</Root>
-		<Logger name="org.example" level="DEBUG"/>
-	</Loggers>
-</Configuration>

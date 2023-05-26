@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Console name="CONSOLE" target="SYSTEM_OUT">
-	<PatternLayout pattern="${CONSOLE_LOG_PATTERN}" charset="${sys:CONSOLE_LOG_CHARSET:-utf8}"/>
-</Console>

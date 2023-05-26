@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ScriptAppenderSelector name="SelectFile">
+<ScriptAppenderSelector name="SelectSyslogFile">
 	<Script language="groovy"><![CDATA[
 		def appenders = System.getProperty("logger.appenders","").toUpperCase()
-		if (appenders.contains("FILE")) {
-			return "FILE"
+		if (appenders.contains("SYSLOG_FILE")) {
+			return "SYSLOG_FILE"
 		} else {
 			return "NULL"
 		}
 	]]></Script>
 	<AppenderSet>
-		<RollingRandomAccessFile name="FILE" fileName="target/app.log" filePattern="target/app-%d{yyyy-MM-dd}.%i.log.gz">
-			<PatternLayout pattern="${FILE_LOG_PATTERN}" charset="${sys:CONSOLE_LOG_CHARSET:-utf8}"/>
+		<RollingRandomAccessFile name="SYSLOG_FILE" fileName="target/app-RFC5424.log" filePattern="target/app-RFC5424-%d{yyyy-MM-dd}-%i.log.gz">
+			<RFC5424Layout appName="${APP_NAME}" facility="SYSLOG" newLine="true" />
 			<Policies>
 				<TimeBasedTriggeringPolicy/>
 				<SizeBasedTriggeringPolicy size="250 MB"/>

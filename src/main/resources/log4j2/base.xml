@@ -2,15 +2,19 @@
 <Configuration xmlns:xi="http://www.w3.org/2001/XInclude">
 	<xi:include href="defaults.xml"/>
 	<Appenders>
-		<xi:include href="console-appender.xml"/>
+		<xi:include href="console-plain-appender.xml"/>
 		<xi:include href="console-json-appender.xml"/>
 		<xi:include href="console-ecs-appender.xml"/>
 		<xi:include href="file-appender.xml"/>
+		<xi:include href="file-syslog-appender.xml"/>
 	</Appenders>
 	<Loggers>
 		<Root level="ERROR">
-			<AppenderRef ref="${default-appender}"/>
+			<AppenderRef ref="SelectConsolePlain"/>
+			<AppenderRef ref="SelectConsoleEcs"/>
+			<AppenderRef ref="SelectConsoleJson"/>
+			<AppenderRef ref="SelectFile"/>
+			<AppenderRef ref="SelectSyslogFile"/>
 		</Root>
-		<Logger name="org.example" level="INFO"/>
 	</Loggers>
 </Configuration>
